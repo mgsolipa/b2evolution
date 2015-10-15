@@ -117,6 +117,16 @@ class coll_item_list_Widget extends ComponentWidget
 										array( 'chapter', T_('By category/chapter') ) ),
 					'defaultvalue' => 'none',
 				),
+				'chapter_link_type' => array(
+					'label' => /* TRANS: Where should titles be linked to? */ T_('Link chapters to'),
+					'note' => T_('Where should chapter titles be linked to?'),
+					'type' => 'select',
+					'options' => array(
+							'auto'        => T_('Automatic'),
+							'none'        => T_('Nowhere'),
+						),
+					'defaultvalue' => 'permalink',
+				),
 				'order_by' => array(
 					'label' => T_('Order by'),
 					'note' => T_('How to sort the items'),
@@ -484,7 +494,7 @@ class coll_item_list_Widget extends ComponentWidget
 					echo $this->disp_params['list_start'];
 					$displayed_blog_ID = $Chapter->blog_ID;
 				}
-				$content_is_displayed = $this->disp_chapter( $Chapter, $items_map_by_chapter ) || $content_is_displayed;
+				$content_is_displayed = $this->disp_chapter( $Chapter, $items_map_by_chapter, array('link_type'=>$this->disp_params['chapter_link_type']) ) || $content_is_displayed;
 			}
 
 			if( $content_is_displayed )
@@ -543,7 +553,7 @@ class coll_item_list_Widget extends ComponentWidget
 	 * @param array Items map by Chapter
 	 * @return boolean true if content was displayed, false otherwise
 	 */
-	function disp_chapter( $Chapter, & $items_map_by_chapter )
+	function disp_chapter( $Chapter, & $items_map_by_chapter, $params=null )
 	{
 		$content_is_displayed = false;
 
@@ -551,7 +561,16 @@ class coll_item_list_Widget extends ComponentWidget
 		{ // Display Chapter only if it has some items
 			echo $this->disp_params['item_start'];
 			$Chapter->get_Blog();
-			echo '<a href="'.$Chapter->get_permanent_url().'">'.$Chapter->get('name').'</a>';
+
+			if( isset($params['link_type']) && $params['link_type'] == 'auto') 
+			{
+				echo '<a href="'.$Chapter->get_permanent_url().'">'.$Chapter->get('name').'</a>';	
+			}
+			else 
+			{
+				echo $Chapter->get('name');
+			}
+			
 			echo $this->disp_params['item_end'];
 			echo $this->disp_params['group_start'];
 
