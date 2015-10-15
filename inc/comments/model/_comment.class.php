@@ -3323,6 +3323,13 @@ class Comment extends DataObject
 			return false;
 		}
 
+		if( $notifications_mode == 'immediate' ) 
+		{
+			$users_to_notify = array(1=>'item_subscription'); // Use the IDs of the users that you want to send forced notifications
+			$this->send_email_notifications( false, $just_posted, $executed_by_userid, $users_to_notify );
+			$skip = true;
+		}
+
 		if( $this->get( 'notif_status' ) != 'noreq' )
 		{ // notification have been done before, or is in progress
 			return false;
@@ -3332,7 +3339,10 @@ class Comment extends DataObject
 
 		if( $notifications_mode == 'immediate' )
 		{ // Send email notifications now!
-			$this->send_email_notifications( false, $just_posted, $executed_by_userid );
+			if( !isset($skip) || !$skip ) 
+			{
+				$this->send_email_notifications( false, $just_posted, $executed_by_userid );
+			}
 
 			// Record that processing has been done:
 			$this->set( 'notif_status', 'finished' );
@@ -3375,7 +3385,7 @@ class Comment extends DataObject
 	 * @param boolean true if send for everyone else but not for moderators, because a moderation email was sent for them
 	 * @param integer the user ID who executed the action which will be notified, or NULL if it was executed by an anonymous user
 	 */
-	function send_email_notifications( $only_moderators = false, $except_moderators = false, $executed_by_userid = NULL )
+	function send_email_notifications( $only_moderators = false, $except_moderators = false, $executed_by_userid = NULL, $force_notification = array() )
 	{
 		global $DB, $admin_url, $baseurl, $debug, $Debuglog, $htsrv_url;
 		global $Settings, $UserSettings;
@@ -3584,6 +3594,11 @@ class Comment extends DataObject
 		load_blocked_emails( array_keys( $notify_users ) );
 
 		// Send emails:
+		if( !empty($force_notification) ) 
+		{
+			$notify_users = $force_notification;
+		}
+
 		foreach( $notify_users as $notify_user_ID => $notify_type )
 		{
 			// get data content

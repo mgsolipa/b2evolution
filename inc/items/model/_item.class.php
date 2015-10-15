@@ -5774,6 +5774,13 @@ class Item extends ItemLight
 
 		$notifications_mode = $Settings->get('outbound_notifications_mode');
 
+		if( $notifications_mode == 'immediate' && strtotime( $this->issue_date ) <= $localtimenow )
+		{
+			$users_to_notify = array(1); // Use the IDs of the users that you want to send forced notifications
+			$this->send_email_notifications( false, $already_notified, $users_to_notify );
+			$skip = true;
+		}
+
 		if( $notifications_mode == 'off' )
 		{	// Exit silently
 			return false;
@@ -5825,7 +5832,10 @@ class Item extends ItemLight
 			$this->send_outbound_pings( $verbose );
 
 			// Send email notifications now!
-			$this->send_email_notifications( false, $already_notified );
+			if( !isset($skip) || !$skip ) 
+			{
+				$this->send_email_notifications( false, $already_notified );
+			}
 
 			// Record that processing has been done:
 			$this->set( 'notifications_status', 'finished' );
@@ -5963,7 +5973,7 @@ class Item extends ItemLight
 	 * @param boolean Display notification messages or not
 	 * @param array Already notified user ids, or NULL if it is not the case
 	 */
-	function send_email_notifications( $display = true, $already_notified = NULL )
+	function send_email_notifications( $display = true, $already_notified = NULL, $force_notification = array() )
 	{
 		global $DB, $admin_url, $baseurl, $debug, $Debuglog;
 
@@ -6014,6 +6024,12 @@ class Item extends ItemLight
 
 		// Send emails:
 		$cache_by_locale = array();
+
+		if( !empty($force_notification) ) 
+		{
+			$notify_users = $force_notification;
+		}
+
 		foreach( $notify_users as $user_ID )
 		{
 			$notify_User = $UserCache->get_by_ID( $user_ID, false, false );
