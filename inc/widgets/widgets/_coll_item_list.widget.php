@@ -125,7 +125,7 @@ class coll_item_list_Widget extends ComponentWidget
 							'auto'        => T_('Automatic'),
 							'none'        => T_('Nowhere'),
 						),
-					'defaultvalue' => 'permalink',
+					'defaultvalue' => 'auto',
 				),
 				'order_by' => array(
 					'label' => T_('Order by'),
