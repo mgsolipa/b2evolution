@@ -7,9 +7,9 @@
  */
 jQuery( document ).ready( function()
 {
-	jQuery( 'a[rel^="lightbox"]' ).each( function()
+	jQuery( 'a[data-rel^="lightbox"]' ).each( function()
 	{
-		var type = jQuery( this ).attr( 'rel' ).match( /lightbox\[([a-z]+)/i );
+		var type = jQuery( this ).attr( 'data-rel' ).match( /lightbox\[([a-z]+)/i );
 		type = type ? type[1] : '';
 		switch( type[1] )
 		{

@@ -1165,7 +1165,7 @@ class File extends DataObject
 				}
 				if( !empty($image_link_rel) )
 				{
-					$a .= ' rel="'.htmlspecialchars($image_link_rel).'"';
+					$a .= ' data-rel="'.htmlspecialchars($image_link_rel).'"';
 				}
 				if( !empty( $image_link_id ) )
 				{ // Set attribute "id" for link
@@ -2336,7 +2336,7 @@ class File extends DataObject
 				), $cbox_params );
 			if( $cbox_params['init'] )
 			{ // Create link to preview image by colorbox plugin
-				$link = '<a href="'.$this->get_url().'" rel="'.$cbox_params['lightbox_rel'].'" id="'.$cbox_params['link_id'].'">'.$img.'</a>';
+				$link = '<a href="'.$this->get_url().'" data-rel="'.$cbox_params['lightbox_rel'].'" id="'.$cbox_params['link_id'].'">'.$img.'</a>';
 			}
 			else
 			{ // Get link to view the file (fallback to no view link - just the img):
