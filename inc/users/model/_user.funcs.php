@@ -232,8 +232,8 @@ function get_login_url( $source, $redirect_to = NULL, $force_normal_login = fals
 	}
 
 	return url_add_param( $url, 'redirect_to='.rawurlencode( $redirect_url )
-			.'&return_to='.rawurlencode( $return_url )
-			.'&source='.rawurlencode( $source ), '&' );
+			.'&amp;return_to='.rawurlencode( $return_url )
+			.'&amp;source='.rawurlencode( $source ), '&amp;' );
 }
 
 
