@@ -160,7 +160,7 @@ siteskin_include( '_site_body_header.inc.php' );
 	?>
 
 	<?php
-	if( $disp != 'front' && $disp != 'download' && $disp != 'posts' )
+	if( $disp != 'front' && $disp != 'download' )
 	{
 		// ------------------------------------ START OF POSTS ----------------------------------------
 		// Display message if no post:
@@ -171,22 +171,6 @@ siteskin_include( '_site_body_header.inc.php' );
 		{	// For each blog post:
 			// ---------------------- ITEM BLOCK INCLUDED HERE ------------------------
 			skin_include( '_item_block.inc.php', array(
-					'content_mode'  => 'full', // We want regular "full" content, even in category browsing: i-e no excerpt or thumbnail
-				) );
-			// ----------------------------END ITEM BLOCK  ----------------------------
-		} // ---------------------------------- END OF POSTS ------------------------------------
-		echo '</div>'; // End of posts display
-	}
-	elseif( $disp == 'posts' ) {
-		// ------------------------------------ START OF POSTS ----------------------------------------
-		// Display message if no post:
-		display_if_empty();
-
-		echo '<div class="evo_content_block">'; // Beginning of posts display
-		while( $Item = & mainlist_get_item() )
-		{	// For each blog post:
-			// ---------------------- ITEM BLOCK INCLUDED HERE ------------------------
-			skin_include( '_posts_media_index.inc.php', array(
 					'content_mode'  => 'full', // We want regular "full" content, even in category browsing: i-e no excerpt or thumbnail
 				) );
 			// ----------------------------END ITEM BLOCK  ----------------------------

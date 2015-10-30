@@ -49,6 +49,11 @@ class photoblog_Skin extends Skin
 		load_funcs( 'files/model/_image.funcs.php' );
 
 		$r = array_merge( array(
+				'alt_idx_varname' => array(
+					'label' => T_('Name of the parameter expected to load alternative media index'),
+					'defaultvalue' => 'jl_main_cat',
+					'type' => 'text',
+				),
 				'menu_bg_color' => array(
 					'label' => T_('Menu background color'),
 					'note' => T_('E-g: #0000ff for blue'),
