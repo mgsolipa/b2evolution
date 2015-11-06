@@ -68,6 +68,7 @@ $core_componentwidget_defs = array(
 			'menu_link',
 			'msg_menu_link',
 			'profile_menu_link',
+			'private_menu_link',
 		),
 	'navigation' => array(
 			'coll_search_form',
