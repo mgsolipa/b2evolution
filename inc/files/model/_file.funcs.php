@@ -682,7 +682,7 @@ function check_rename( & $newname, $is_dir, $dir_path, $allow_locked_filetypes )
 	{
 		if( $error_dirname = validate_dirname( $newname ) )
 		{ // invalid directory name
-			syslog_insert( sprintf( 'Invalid name is detected for folder %s', '<b>'.$newname.'</b>' ), 'warning', 'file' );
+			syslog_insert( $error_dirname, 'warning', 'file' );
 			return $error_dirname;
 		}
 		if( $dirpath_max_length < ( strlen( $dir_path ) + strlen( $newname ) ) )
@@ -693,7 +693,7 @@ function check_rename( & $newname, $is_dir, $dir_path, $allow_locked_filetypes )
 	}
 	elseif( $error_filename = validate_filename( $newname, $allow_locked_filetypes ) )
 	{ // Not a file name or not an allowed extension
-		syslog_insert( sprintf( 'The renamed file %s has an unrecognized extension', '<b>'.$newname.'</b>' ), 'warning', 'file' );
+		syslog_insert( 'Renaming file failed with the following error: ' . $error_filename, 'warning', 'file' );
 		return $error_filename;
 	}
 

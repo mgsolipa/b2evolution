@@ -393,7 +393,7 @@ switch( $action )
 		if( $error_dirname = validate_dirname( $create_name ) )
 		{ // Not valid dirname
 			$Messages->add( $error_dirname, 'error' );
-			syslog_insert( sprintf( 'Invalid name is detected for folder %s', '<b>'.$create_name.'</b>' ), 'warning', 'file' );
+			syslog_insert( $error_dirname, 'warning', 'file' );
 			break;
 		}
 
@@ -455,7 +455,7 @@ switch( $action )
 		if( $error_filename = validate_filename( $create_name, $current_User->check_perm( 'files', 'all' ) ) )
 		{ // Not valid filename or extension
 			$Messages->add( $error_filename, 'error' );
-			syslog_insert( sprintf( 'The creating file %s has an unrecognized extension', '<b>'.$create_name.'</b>' ), 'warning', 'file' );
+			syslog_insert( $error_filename, 'warning', 'file' );
 			break;
 		}
 
@@ -1420,7 +1420,7 @@ switch( $fm_mode )
 				{ // Not a file name or not an allowed extension
 					$confirm = 0;
 					$Messages->add( $error_filename , 'error' );
-					syslog_insert( sprintf( 'The copied file %s has an unrecognized extension', '<b>'.$new_names[$loop_src_File->get_md5_ID()].'</b>' ), 'warning', 'file', $loop_src_File->ID );
+					syslog_insert( 'Copying files failed with the following error: ' . $error_filename, 'warning', 'file', $loop_src_File->ID );
 					continue;
 				}
 			}
@@ -1428,6 +1428,7 @@ switch( $fm_mode )
 			{ // Not a directory name
 				$confirm = 0;
 				$Messages->add( $error_dirname, 'error' );
+				syslog_insert( $error_dirname, 'warning', 'file', $loop_src_File->ID );
 				continue;
 			}
 

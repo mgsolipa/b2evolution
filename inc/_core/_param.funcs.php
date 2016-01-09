@@ -874,7 +874,7 @@ function param_check_filename( $var, $err_msg )
 	if( $error_filename = validate_filename( $GLOBALS[$var] ) )
 	{
 		param_error( $var, $error_filename );
-		syslog_insert( sprintf( 'File %s is invalid or has an unrecognized extension', '<b>'.$GLOBALS[$var].'</b>' ), 'warning', 'file' );
+		syslog_insert( $error_filename, 'warning', 'file' );
 		return false;
 	}
 	return true;
