@@ -93,17 +93,16 @@ if( count( $chapters ) > 0 )
 		if( $root_Chapter->meta )
 		{ // Meta category
 			$chapters_children = $root_Chapter->get_children( true );
-?>
-		<header class="panel-heading meta_category"><a href="<?php echo $root_Chapter->get_permanent_url(); ?>" class="forumlink"><?php echo $root_Chapter->dget( 'name' ); ?></a></header>
-<?php
+			$meta_header_displayed = false;
 		}
 		else
 		{ // Simple category with posts
 			$chapters_children = array( $root_Chapter );
-		}
 ?>
-		<section class="table table-hover">
+		<section class="table table-hover">		
 <?php
+		}
+
 		foreach( $chapters_children as $Chapter )
 		{ // Loop through categories:
 			if( $Chapter->lock )
@@ -118,6 +117,17 @@ if( count( $chapters ) > 0 )
 				$chapter_icon_title = T_('Forum (contains several topics)');
 				$legend_icons['forum_default'] = 1;
 			}
+
+			if ( $postcount_in_category = get_postcount_in_category( $Chapter->ID ) )
+			{
+				if ( $root_Chapter->meta && ! $meta_header_displayed ) 
+				{ // Moved here to to display it only if the category is not empty
+					$meta_header_displayed = true;
+?>
+		<header class="panel-heading meta_category"><a href="<?php echo $root_Chapter->get_permanent_url(); ?>" class="forumlink"><?php echo $root_Chapter->dget( 'name' ); ?></a></header>
+		<section class="table table-hover">
+<?php
+				}
 ?>
 		<article class="container group_row">
 			<div class="ft_status__ft_title col-lg-8 col-md-7 col-sm-7 col-xs-6">
@@ -148,7 +158,7 @@ if( count( $chapters ) > 0 )
 				</div>
 			</div>
 			<div class="ft_count col-lg-1 col-md-1 col-sm-1 col-xs-2">
-				<?php printf( T_('%s topics'), '<div><a href="'. $Chapter->get_permanent_url() .'">'.get_postcount_in_category( $Chapter->ID ).'</a></div>' ); ?>
+				<?php printf( T_('%s topics'), '<div><a href="'. $Chapter->get_permanent_url() .'">'.$postcount_in_category.'</a></div>' ); ?>
 			</div>
 			<div class="ft_count second_of_class col-lg-1 col-md-1 col-sm-1 col-xs-2"><?php printf( T_('%s replies'), '<div><a href="'. $Chapter->get_permanent_url() .'">'.get_commentcount_in_category( $Chapter->ID ).'</a></div>' ); ?></div>
 			<div class="ft_date col-lg-2 col-md-3 col-sm-3"><?php echo $Chapter->get_last_touched_date( 'D M j, Y H:i' ); ?></div>
@@ -156,6 +166,7 @@ if( count( $chapters ) > 0 )
 			<div class="ft_date_shrinked col-xs-2"><?php echo $Chapter->get_last_touched_date( 'm/j/y' ); ?></div>
 		</article>
 <?php
+			}
 		}
 ?>
 		</section>
