@@ -11,7 +11,7 @@ if( !defined('EVO_MAIN_INIT') ) die( 'Please, do not access this page directly.'
  *
  * This plugin displays
  */
-class thisdayinhistory_plugin extends Plugin
+class daystories_plugin extends Plugin
 {
 	/**
 	 * Variables below MUST be overriden by plugin implementations,
@@ -19,7 +19,7 @@ class thisdayinhistory_plugin extends Plugin
 	 */
 
 	var $name;
-	var $code = 'evo_ThisDayInHistory';
+	var $code = 'evo_daystories';
 	var $priority = 96;
 	var $version = '0.1';
 	var $group = 'widget';
@@ -31,9 +31,9 @@ class thisdayinhistory_plugin extends Plugin
 	 */
 	function PluginInit( & $params )
 	{
-		$this->name = T_( 'This Day in History' );
-		$this->short_desc = T_('This widget displays posts from previous years according to a chosen date.');
-		$this->long_desc = T_('Take posts from previous years on a chosen date.');
+		$this->name = T_( 'Day stories' );
+		$this->short_desc = T_('Posts from previous years on a chosen date.');
+		$this->long_desc = T_('This widget displays posts from previous years according to a chosen date.');
 	}
 
 
@@ -50,18 +50,21 @@ class thisdayinhistory_plugin extends Plugin
 				'label' => T_('Block title'),
 				'note' => T_('The of the widget.'),
 				'type' => 'text',
+				'size' => 20,
 			),
 			'posts_date' => array(
 				'label' => T_('Posts date'),
 				'note' => T_('Base date of the posts to be displayed. Today: take posts from today - Custom date: set a date a different date (see Custom date field).'),
 				'type' => 'select',
 				'options' => array('today' => T_('Today'), 'custom' => T_('Custom date')),
+				'size' => 20,
 			),
 			'custom_date' => array(
 				'label' => T_('Custom date'),
 				'note' => T_('Retrieve posts from this date . Format: dd-mm'),
 				'type' => 'text',
-				'valid_pattern' => '#^[0-9]{2}-[0-9]{2}$#'
+				'valid_pattern' => '#^[0-9]{2}-[0-9]{2}$#',
+				'size' => 20,
 			),
 			'years' => array(
 				'label' => T_('Years'),
@@ -71,22 +74,26 @@ class thisdayinhistory_plugin extends Plugin
 				'valid_range' => array(
 					'min' => 1, // 0 would not make sense.
 				),
+				'size' => 20,
 			),
 			'year_title' => array(
 				'label' => T_('Year title'),
 				'note' => T_('The title of each year. Date: d/m/Y (get value from year_title_format) - Friendly text: 1 year ago, 2 years ago, 3 years ago...'),
 				'type' => 'select',
 				'options' => array('date' => T_('Date'), 'friendly' => T_('Firendly text')),
+				'size' => 20,
 			),
 			'year_title_format' => array(
 				'label' => T_('Year\'s format'),
 				'note' => T_('Format to display the title of each year. Accepted values: valid formats of the standard php date() function. Dates are displayed using the server\'s locale settings. b2evolution locales system is not supported yet. '),
 				'type' => 'text',
+				'size' => 20,
 			),
 			'excerpt_length' => array(
 				'label' => T_('Excerpt length'),
 				'note' => T_('Number of characters to display below the title of the post.'),
 				'type' => 'text',
+				'size' => 20,
 			),
 			'posts_per_year' => array(
 				'label' => T_('Posts per year'),
@@ -96,6 +103,7 @@ class thisdayinhistory_plugin extends Plugin
 				'valid_range' => array(
 					'min' => 1, // 0 would not make sense.
 				),
+				'size' => 20,
 			),
 		);
 		return $r;
@@ -329,7 +337,6 @@ class thisdayinhistory_plugin extends Plugin
 	 */
 	function get_custom_date( $params ) 
 	{
-
 		$custom_date = explode( '-', $params['custom_date'] );
 
 		// Use 2016 (leap year), so even 2016-02-29 will produce a valid date
