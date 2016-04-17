@@ -141,6 +141,7 @@ class Plugins_admin extends Plugins
 				'RenderItemAsXml' => 'Renders content when generated as XML.',
 				'RenderItemAsText' => 'Renders content when generated as plain text.',
 				'RenderItemAttachment' => 'Renders item attachment.',
+				'RenderItemGalleries' => 'Renders item galleries.',
 				'RenderCommentAttachment' => 'Renders comment attachment.',
 				'RenderMessageAsHtml' => 'Renders message content when generated as HTML.',
 				'RenderEmailAsHtml' => 'Renders email content when generated as HTML.',

@@ -2837,6 +2837,7 @@ class Item extends ItemLight
 				if( ( $gallery = $File->get_gallery( $params ) ) != '' )
 				{ // Got gallery code
 					$galleries[] = $gallery;
+					$galleries_info[] = $File;
 				}
 				continue;
 			}
@@ -2904,8 +2905,14 @@ class Item extends ItemLight
 				'order' - files order ASC/DESC/RAND
 			*/
 
-			// Character conversions
-			$r .= "\n".format_to_output( implode("\n", $galleries), $format );
+			$params['galleries'] = $galleries;
+			$params['galleries_info'] = $galleries_info;
+			$params['format'] = $format;
+
+			if( count( $Plugins->trigger_event_first_true( 'RenderItemGalleries', $params ) ) == 0 )
+			{
+				$r .= "\n".format_to_output( implode("\n", $galleries), $format );
+			}
 		}
 
 		return $r;
