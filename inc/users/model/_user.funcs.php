@@ -5235,6 +5235,9 @@ function users_results_block( $params = array() )
 	}
 	if( is_logged_in() && $current_User->check_perm( 'users', 'edit', false ) )
 	{
+		$queryString = 'colselect_submit=&keywords='.get_param('keywords').'&account_status='.get_param('account_status').'&group='.get_param('group').'&group2='.get_param('group2').'&country='.get_param('country').'&region='.get_param('region').'&subregion='.get_param('subregion').'&city='.get_param('city').'&age_min='.get_param('age_min').'&age_max='.get_param('age_max').'&level_min='.get_param('level_min').'&level_max='.get_param('level_max').'&org='.get_param('org');
+		$UserList->global_icon( T_('Mass delete the current user list...'), 'delete', $admin_url.'?ctrl=users&amp;action=mass_delete&'.$queryString, T_('Mass delete').' &raquo;', 3, 4, array( 'class' => 'action_icon '.( $action == 'newsletter' ? 'btn-default' :  'btn-danger' ) ) );
+
 		if( $params['display_btn_adduser'] )
 		{ // Display a button to add user
 			$UserList->global_icon( T_('Create a new user...'), 'new', $admin_url.'?ctrl=user&amp;action=new&amp;user_tab=profile', T_('Add user').' &raquo;', 3, 4, array( 'class' => 'action_icon '.( $action == 'newsletter' ? 'btn-default' :  'btn-primary' ) ) );

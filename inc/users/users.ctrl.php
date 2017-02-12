@@ -379,6 +379,136 @@ if( !$Messages->has_errors() )
 
 			$Messages->add( T_('Please select new recipients for this email campaign.'), 'success' );
 			break;
+
+		case 'mass_delete':
+			$params = array();
+			$params = array_merge( array(
+				'org_ID'               => NULL,
+				'viewed_user'          => NULL,
+				'filterset_name'       => 'admin',
+				'results_param_prefix' => 'users_',
+				'results_title'        => T_('Users').get_manual_link('users_and_groups'),
+				'results_no_text'      => T_('No users'),
+				'results_order'        => '/user_lastseen_ts/D',
+				'page_url'             => get_dispctrl_url( 'users' ),
+				'join_group'           => true,
+				'join_city'            => false,
+				'join_country'         => true,
+				'keywords_fields'      => NULL,
+				'where_status_closed'  => NULL,
+				'display_params'       => array(),
+				'display_orgstatus'    => false,
+				'display_filters'      => true,
+				'display_btn_refresh'  => true,
+				'display_btn_adduser'  => true,
+				'display_btn_addgroup' => true,
+				'display_btn_adduserorg' => false,
+				'display_ID'           => true,
+				'display_avatar'       => true,
+				'display_login'        => true,
+				'display_firstname'    => false,
+				'display_lastname'     => false,
+				'display_nickname'     => true,
+				'display_name'         => true,
+				'display_role'         => false,
+				'display_gender'       => true,
+				'display_country'      => true,
+				'display_region'       => false,
+				'display_subregion'    => false,
+				'display_country_type' => 'both', // 'both', 'flag', 'name'
+				'display_city'         => false,
+				'display_phone'        => false,
+				'display_soclinks'     => false,
+				'display_blogs'        => true,
+				'display_source'       => true,
+				'display_regdate'      => true,
+				'display_regcountry'   => true,
+				'display_update'       => true,
+				'display_lastvisit'    => true,
+				'display_contact'      => true,
+				'display_reported'     => true,
+				'display_group'        => true,
+				'display_sec_groups'   => false,
+				'display_level'        => true,
+				'display_status'       => true,
+				'display_actions'      => true,
+				'display_org_actions'  => false,
+				'display_newsletter'   => true,
+				'force_check_user'     => false,
+			), $params );
+
+			$is_spammer = ( param( 'deltype', 'string', '', true ) == 'spammer' );
+
+			load_class( 'users/model/_userlist.class.php', 'UserList' );
+			$UserList = new UserList( $params['filterset_name'], $UserSettings->get('results_per_page'), $params['results_param_prefix'], array(
+				'join_group'          => $params['join_group'],
+				'join_sec_groups'     => $params['display_sec_groups'],
+				'join_city'           => $params['join_city'],
+				'join_region'         => $params['display_region'],
+				'join_subregion'      => $params['display_subregion'],
+				'join_country'        => $params['join_country'],
+				'join_colls'          => $params['display_blogs'],
+				'keywords_fields'     => $params['keywords_fields'],
+				'where_status_closed' => $params['where_status_closed'],
+				'where_org_ID'        => $params['org_ID'],
+				'where_viewed_user'   => $params['viewed_user'],
+			) );
+
+			$default_filters = array( 'order' => $params['results_order'], 'org' => $params['org_ID'] );
+
+			$UserList->set_default_filters( $default_filters );
+			$UserList->load_from_Request();
+
+			$UserList->query();
+
+			foreach( $UserList->rows as $row ) {
+				if( ($edited_User = & $UserCache->get_by_ID( $row->user_ID, false )) !== false ) {
+
+					$edited_User->init_relations($is_spammer);
+
+					$fullname = $edited_User->dget('fullname');
+
+					if (!empty($fullname)) {
+						$msg_format = $is_spammer ? T_('Spammer &laquo;%s&raquo; [%s] deleted.') : T_('User &laquo;%s&raquo; [%s] deleted.');
+						$msg = sprintf($msg_format, $fullname, $edited_User->dget('login'));
+					} else {
+						$msg_format = $is_spammer ? T_('Spammer &laquo;%s&raquo; deleted.') : T_('User &laquo;%s&raquo; deleted.');
+						$msg = sprintf($msg_format, $edited_User->dget('login'));
+					}
+
+					$send_reportpm = param('send_reportpm', 'integer', 0);
+					$increase_spam_score = param('increase_spam_score', 'integer', 0);
+					if ($send_reportpm || $increase_spam_score) { // Get all user IDs who reported for the deleted user:
+						$report_user_IDs = get_user_reported_user_IDs($edited_User->ID);
+					}
+
+					$deleted_user_ID = $edited_User->ID;
+					$deleted_user_email = $edited_User->get('email');
+					$deleted_user_login = $edited_User->get('login');
+					if ($edited_User->dbdelete($Messages) !== false) { // User has been deleted successfully
+						unset($edited_User);
+						forget_param('user_ID');
+						$Messages->add($msg, 'success');
+						syslog_insert(sprintf('User %s was deleted.', '[[' . $deleted_user_login . ']]'), 'info', 'user', $deleted_user_ID);
+
+						// Find other users with the same email address:
+						$message_same_email_users = find_users_with_same_email($deleted_user_ID, $deleted_user_email, T_('Note: the same email address (%s) is still in use by: %s'));
+						if ($message_same_email_users !== false) {
+							$Messages->add($message_same_email_users, 'note');
+						}
+
+						if ($send_reportpm) { // Send an info message to users who reported this deleted user:
+							user_send_report_message($report_user_IDs, $deleted_user_login);
+						}
+
+						if ($increase_spam_score) { // Increase spam fighter score for the users who reported the deleted account:
+							user_increase_spam_score($report_user_IDs);
+						}
+					}
+				}
+			}
+
+			break;
 	}
 }
 
