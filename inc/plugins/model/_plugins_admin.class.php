@@ -264,6 +264,8 @@ class Plugins_admin extends Plugins
 				'HandleDispMode' => 'Called when displaying $disp',
 
 				'GetAdditionalColumnsTable' => 'Called to add columns for Results object',
+
+				'RequestBlockedByIP' => 'Called when a request has been blocked by IP',
 			);
 
 			if( ! defined('EVO_IS_INSTALLING') || ! EVO_IS_INSTALLING )

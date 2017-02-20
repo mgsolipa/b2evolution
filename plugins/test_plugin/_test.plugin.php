@@ -3499,6 +3499,11 @@ class test_plugin extends Plugin
 	}
 
 
+	function RequestBlockedByIP() {
+		header('Location: http://google.com');
+	}
+
+
 	////////// Custom plugin methods - END //////////
 }
 
