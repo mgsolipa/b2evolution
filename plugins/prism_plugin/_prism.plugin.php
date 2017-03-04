@@ -202,10 +202,10 @@ class prism_plugin extends Plugin
 
 			// Detect number of start line:
 			$line = intval( preg_replace( '/.*line="?(-?[0-9]+)"?.*/i', '$1', html_entity_decode( $block[2] ) ) );
-			$line = $line != 1 ? ' data-start="'.$line.'"' : '';
+			$line = $line != 1 ? ' title="'.$line.'"' : '';
 
 			// Put <pre> around <code> to render codeblock
-			$r = '<pre class="line-numbers"'.$line.'>'.$r.'</pre>';
+			$r = '<pre class="validhtml-linenrbs"'.$line.'>'.$r.'</pre>';
 		}
 
 		return $r;
@@ -220,7 +220,7 @@ class prism_plugin extends Plugin
 	 */
 	function unfilter_code( $content )
 	{
-		$content = preg_replace_callback( '#(<pre class="line-numbers"( data-start="(-?[0-9]+)")?>)?<code( class="([^"]+)")?>([\s\S]+?)?</code>(</pre>)?#i',
+		$content = preg_replace_callback( '#(<pre class="validhtml-linenrbs"( title="(-?[0-9]+)")?>)?<code( class="([^"]+)")?>([\s\S]+?)?</code>(</pre>)?#i',
 								array( $this, 'unfilter_code_callback' ), $content );
 
 		return $content;
@@ -247,7 +247,7 @@ class prism_plugin extends Plugin
 		{ // [codeblock]
 			$code_tag = 'codeblock';
 			// Detect number of start line:
-			preg_match( '/.*data-start="(-?[0-9]+)".*/i', html_entity_decode( $block[1] ), $line );
+			preg_match( '/.*title="(-?[0-9]+)".*/i', html_entity_decode( $block[1] ), $line );
 			$line = ' line="'.( isset( $line[1] ) ? intval( $line[1] ) : '1' ).'"';
 
 			// Revert back first empty line:
@@ -298,6 +298,10 @@ class prism_plugin extends Plugin
 
 		$this->require_js( 'js/prism.min.js' );
 		$this->require_css( 'css/prism.min.css' );
+
+		//b2evo plugins
+		$this->require_js( 'js/validhtml.plugin.js' );
+		$this->require_css( 'css/validhtml.plugin.css' );
 	}
 
 
