@@ -145,11 +145,9 @@ $Form->end_fieldset();
 if( in_array( $action, array( 'create', 'new-name' ) ) && $ctrl = 'collections' )
 { // Only show demo content option when creating a new collection
 	$Form->begin_fieldset( T_( 'Demo contents' ).get_manual_link( 'collection-demo-content' ) );
-		$Form->radio( 'create_demo_contents', param( 'create_demo_contents', 'integer', -1 ),
-					array(
-						array( 1, T_('Initialize this collection with some demo contents') ),
-						array( 0, T_('Create an empty collection') ),
-					), T_('New contents'), true );
+        $Form->checkbox( 'create_demo_contents', param( 'create_demo_contents', 'integer', 0 ),
+            T_( 'New contents' ), T_( 'Create demo contents and enable the options displayed below.' ) );
+
 		if( $current_User->check_perm( 'orgs', 'create', false ) )
 		{ // Permission to create organizations
 			$Form->checkbox( 'create_demo_org', param( 'create_demo_org', 'integer', 1 ),
