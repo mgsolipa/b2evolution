@@ -1482,7 +1482,7 @@ function mysql2localedatetime( $mysqlstring )
 	return mysql2date( locale_datefmt().' '.locale_timefmt(), $mysqlstring );
 }
 
-function mysql2localedatetime_spans( $mysqlstring, $datefmt = NULL, $timefmt = NULL )
+function mysql2localedatetime_spans( $mysqlstring, $datefmt = NULL, $timefmt = NULL, $useGM = false )
 {
 	if( is_null( $datefmt ) )
 	{
@@ -1494,9 +1494,9 @@ function mysql2localedatetime_spans( $mysqlstring, $datefmt = NULL, $timefmt = N
 	}
 
 	return '<span class="date">'
-					.mysql2date( $datefmt, $mysqlstring )
+					.mysql2date( $datefmt, $mysqlstring, $useGM )
 					.'</span> <span class="time">'
-					.mysql2date( $timefmt, $mysqlstring )
+					.mysql2date( $timefmt, $mysqlstring, $useGM )
 					.'</span>';
 }
 

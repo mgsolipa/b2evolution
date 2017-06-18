@@ -80,7 +80,7 @@ function hits_results( & $Results, $params = array() )
 			'order' => 'hit_ID',
 			'default_dir' => 'D',
 			'td_class' => 'timestamp compact_data',
-			'td' => '%mysql2localedatetime_spans( #hit_datetime# )%',
+			'td' => '%mysql2localedatetime_spans( #hit_datetime#, null, null, true )%',
 		);
 
 	$Results->cols[] = array(
