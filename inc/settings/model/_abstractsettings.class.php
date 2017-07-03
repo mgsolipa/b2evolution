@@ -418,6 +418,14 @@ class AbstractSettings
 		{
 			return $this->_defaults[ $last_key ];
 		}
+        elseif ( preg_match('/\[\d+\]/', $last_key) )
+        {   // An array of settings
+            $last_key = str_replace(array('[',']'), '', preg_replace('/\[\d+\]/', '__', $last_key));
+            if ( isset($this->_defaults[ $last_key ]) )
+            {
+                return $this->_defaults[ $last_key ];
+            }
+        }
 
 		return NULL;
 	}

@@ -743,7 +743,18 @@ class Plugins
 			}
 			elseif( isset( $l_meta['type'] ) && strpos( $l_meta['type'], 'array' ) === 0 )
 			{
-				$set_Obj->_defaults[$l_name] = array();
+                if ( isset($l_meta['entries'] ) && is_array($l_meta['entries']) )
+                {
+                    foreach( $l_meta['entries'] as $_l_name => $_l_meta )
+                    {
+                        if( isset($_l_meta['defaultvalue']) )
+                        {
+                            $set_Obj->_defaults[$l_name.'__'.$_l_name] = $_l_meta['defaultvalue'];
+                        }
+                    }
+                }
+
+                $set_Obj->_defaults[$l_name] = array();
 			}
 			else
 			{
