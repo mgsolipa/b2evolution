@@ -229,7 +229,7 @@ class coll_comment_list_Widget extends ComponentWidget
 				if( $this->disp_params['comment_excerpt'] )
 				{
 					echo $this->disp_params['comment_excerpt_before'];
-					echo excerpt_words( $Comment->get_content(), $this->disp_params['max_words'] );
+					echo excerpt_words( $Comment->get_content(), $this->disp_params['max_words'], array('continued_link' => $Comment->get_permanent_url()) );
 					echo $this->disp_params['comment_excerpt_after'];
 				}
 				echo $this->disp_params[ 'item_end' ];

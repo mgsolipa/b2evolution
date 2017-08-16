@@ -479,7 +479,7 @@ function excerpt( $str, $maxlen = 254, $tail = '&hellip;' )
  * @param int Maximum length
  * @return string
  */
-function excerpt_words( $str, $maxwords = 50 )
+function excerpt_words( $str, $maxwords = 50, $params = array() )
 {
 	// Add spaces
 	$str = str_replace( array( '<p>', '<br' ), array( ' <p>', ' <br' ), $str );
@@ -497,7 +497,7 @@ function excerpt_words( $str, $maxwords = 50 )
 	// Ger rid of all new lines and Display the html tags as source text:
 	$str = trim( preg_replace( '#[\r\n\t\s]+#', ' ', $str ) );
 
-	$str = strmaxwords( $str, $maxwords );
+	$str = strmaxwords( $str, $maxwords, $params );
 
 	return $str;
 }
