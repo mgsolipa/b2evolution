@@ -675,7 +675,7 @@ class tinymce_plugin extends Plugin
 		global $UserSettings;
 		global $ReqHost;
 
-		$tmce_plugins_array = array( 'image', 'importcss', 'link', 'pagebreak', 'morebreak', 'textcolor', 'media', 'nonbreaking', 'charmap', 'fullscreen', 'table', 'searchreplace', 'autocomplete' );
+		$tmce_plugins_array = array( 'image', 'importcss', 'pagebreak', 'morebreak', 'textcolor', 'media', 'nonbreaking', 'charmap', 'fullscreen', 'table', 'searchreplace', 'autocomplete' );
 
 		if( function_exists( 'enchant_broker_init' ) )
 		{ // Requires Enchant spelling library
@@ -834,7 +834,8 @@ class tinymce_plugin extends Plugin
 		// comma separated list of plugins: -- http://wiki.moxiecode.com/index.php/TinyMCE:Plugins
 		$init_options[] = 'plugins : "'.$tmce_plugins.'"';
 		$init_options[] = 'external_plugins: {
-				"morebreak"    : "'.$rsc_url.'js/tiny_mce/plugins/morebreak/plugin.min.js"
+				"morebreak"    : "'.$rsc_url.'js/tiny_mce/plugins/morebreak/plugin.min.js",
+				"b2evolink"    : "'.$this->get_plugin_url().'plugins/b2evolink/plugin.min.js"
 			}';
 		$init_options[] = 'morebreak_separator : "[teaserbreak]"';
 		$init_options[] = 'pagebreak_separator : "[pagebreak]"';
