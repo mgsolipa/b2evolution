@@ -2621,7 +2621,9 @@ class Comment extends DataObject
 					}
 					else
 					{ // load prerendered cache for each comment from the CommentList
-						$SQL->WHERE( 'cmpr_cmt_ID IN ( '.implode( ',', $CommentList->get_page_ID_array() ).' )' );
+                        if ( $page_id_array = $CommentList->get_page_ID_array() ) {
+                            $SQL->WHERE( 'cmpr_cmt_ID IN ( '.implode( ',', $CommentList->get_page_ID_array() ).' )' );
+                        }
 					}
 					$SQL->WHERE_and( 'cmpr_format = '.$DB->quote( $format ) );
 					$rows = $DB->get_results( $SQL->get(), OBJECT, 'Preload prerendered comments content ('.$format.')' );
